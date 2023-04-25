@@ -1,0 +1,7 @@
+spring:
+  # in-memory database for testing
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
