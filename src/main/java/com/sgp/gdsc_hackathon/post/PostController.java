@@ -6,6 +6,7 @@ import com.sgp.gdsc_hackathon.post.dto.MyPostsReqDto;
 import com.sgp.gdsc_hackathon.post.dto.OnePostDto;
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
 import com.sgp.gdsc_hackathon.post.dto.PostLinkedResponseDto;
+import com.sgp.gdsc_hackathon.post.dto.PostReceiveDetailResDto;
 import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostsReceiveResDto;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
@@ -48,17 +49,6 @@ public class PostController {
                 .build();
     }
 
-    @GetMapping("posts/receive")
-    @Operation(summary = "내가 받은 글들 조회", description = "로그인한 User가 받은 게시글들을 조회합니다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "내게 전송된 글들을 조회합니다.", content = @Content(schema = @Schema(implementation = PostsReceiveResDto.class))),
-            @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
-    public PostsReceiveResDto getReceivedPosts() {
-        List<PostResponseDto> posts = postService.getReceivedPosts();
-        return PostsReceiveResDto.builder()
-                .posts(posts)
-                .build();
-    }
 
     @PostMapping("/posts")
     @Operation(summary = "글 생성", description = "새 글을 생성해 5명에게 전파한 후, 글의 ID를 반환합니다.")
@@ -78,10 +68,28 @@ public class PostController {
         postToPostService.addRelation(prev, toPost);
     }
 
-    @GetMapping("/posts/all")
-    public List<List<PostLinkedResponseDto>> getLinkedPosts() {
-        return postService.findAllLinkedPostsNotAnswered();
+    @GetMapping("posts/receive")
+    @Operation(summary = "내가 받은 글들 간단 조회", description = "로그인한 User가 받은 글들을 이전 기록 없이 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내게 전송된 글들을 조회합니다.", content = @Content(schema = @Schema(implementation = PostsReceiveResDto.class))),
+            @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+    public PostsReceiveResDto getReceivedPosts() {
+        List<PostResponseDto> posts = postService.getReceivedPosts();
+        return PostsReceiveResDto.builder()
+                .posts(posts)
+                .build();
     }
+
+    @GetMapping("/posts/all")
+    @Operation(summary = "내가 받은 글들 상세 조회", description = "로그인한 User가 받은 글들의 이전 기록(root)까지 전부 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내게 전송된 글들을 조회합니다.", content = @Content(schema = @Schema(implementation = PostReceiveDetailResDto.class))),
+            @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+    public PostReceiveDetailResDto getLinkedPosts() {
+        List<List<PostLinkedResponseDto>> res = postService.findAllLinkedPosts();
+        return PostReceiveDetailResDto.builder()
+                .postReceiveDetail(res)
+                .build();
 
     @GetMapping("/posts/public")
     public List<List<PostLinkedResponseDto>> getPublicPosts() {
@@ -92,4 +100,5 @@ public class PostController {
     public List<PostLinkedResponseDto> getSingleLinkedPosts(@PathVariable("post_id") Long postId) {
         return postService.findSingleLinkedPosts(postId);
     }
+
 }
