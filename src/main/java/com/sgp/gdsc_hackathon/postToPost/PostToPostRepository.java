@@ -10,4 +10,6 @@ public interface PostToPostRepository extends JpaRepository<PostToPost, Long> {
     Optional<PostToPost> findByNow(Post nowPost);
 
     List<PostToPost> findAllByNowIn(List<Post> nowPosts);
+
+    List<PostToPost> findByPrev(Post prevPost);
 }

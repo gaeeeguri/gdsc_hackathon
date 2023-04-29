@@ -10,7 +10,7 @@ INSERT INTO member (username, password, nickname) VALUES ('ks9', '{bcrypt}$2a$10
 INSERT INTO member (username, password, nickname) VALUES ('ks10', '{bcrypt}$2a$10$oVbP3wYPdpZ/eG1AsY5gsOnoAQSL7i67xVmXgL1ySdDo39kzvWd5u', 'mt_kim10');
 
 
-INSERT INTO post (content, member_id) VALUES ('행복의 조건이란, 생각을 멈추는 것입니다.', 1);
+INSERT INTO post (content, member_id, depth) VALUES ('행복의 조건이란, 생각을 멈추는 것입니다.', 1, 1);
 
 
 INSERT INTO post_receiver (member_id, post_id) VALUES (6, 1);

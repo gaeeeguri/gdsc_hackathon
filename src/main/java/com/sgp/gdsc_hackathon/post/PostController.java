@@ -54,17 +54,18 @@ public class PostController {
     @Operation(summary = "글 생성", description = "새 글을 생성해 5명에게 전파한 후, 글의 ID를 반환합니다.")
     public Long createPost(@RequestBody PostCreateDto post) {
         String username = getLoginUsername();
-        return postService.upload(post, username);
+        return postService.upload(post, username, 0);
     }
 
     @PostMapping("/posts/{from_id}")
     @Operation(summary = "특정 글에 글 추가", description = "{from_id}를 가진 글에 새로운 글을 달고, 5명에게 전파합니다. 반환은 없습니다.")
     public void appendPost(@PathVariable("from_id") Long fromId, @RequestBody PostCreateDto postCreateDto) {
-        Long toPostId = this.createPost(postCreateDto);
+        String username = getLoginUsername();
+        Post prev = postService.getPostById(fromId);
+        Long toPostId = postService.upload(postCreateDto, username, prev.getDepth() + 1);
         Post toPost = postService.getPostById(toPostId);
 
-        Post fromPost = postService.getPostById(fromId);
-        postToPostService.addRelation(fromPost, toPost);
+        postToPostService.addRelation(prev, toPost);
     }
 
     @GetMapping("posts/receive")
@@ -89,8 +90,15 @@ public class PostController {
         return PostReceiveDetailResDto.builder()
                 .postReceiveDetail(res)
                 .build();
+
+    @GetMapping("/posts/public")
+    public List<List<PostLinkedResponseDto>> getPublicPosts() {
+        return postService.findPublicLinkedPosts();
     }
 
-//    @GetMapping("/posts/{post_id}")
+    @GetMapping("/posts/{post_id}")
+    public List<PostLinkedResponseDto> getSingleLinkedPosts(@PathVariable("post_id") Long postId) {
+        return postService.findSingleLinkedPosts(postId);
+    }
 
 }

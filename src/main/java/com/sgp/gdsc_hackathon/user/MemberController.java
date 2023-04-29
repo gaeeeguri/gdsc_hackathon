@@ -63,4 +63,9 @@ public class MemberController {
         }
         return tokeninfo;
     }
+
+    @GetMapping("/today")
+    public Boolean didPost() {
+        return memberService.didPost();
+    }
 }
