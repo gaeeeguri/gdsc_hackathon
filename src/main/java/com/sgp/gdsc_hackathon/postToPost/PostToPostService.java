@@ -4,6 +4,8 @@ import com.sgp.gdsc_hackathon.post.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PostToPostService {
@@ -16,5 +18,9 @@ public class PostToPostService {
         postToPost.setFrom(fromPost);
         postToPost.setTo(toPost);
         postToPostRepository.save(postToPost);
+    }
+
+    public Optional<Post> getFrom(Post toPost) {
+        return postToPostRepository.getFromByTo(toPost);
     }
 }

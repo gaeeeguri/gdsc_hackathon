@@ -3,8 +3,10 @@ package com.sgp.gdsc_hackathon.post;
 import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
 
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
+import com.sgp.gdsc_hackathon.post.dto.PostLinkedResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
 import com.sgp.gdsc_hackathon.postReceiver.PostReceiverService;
+import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
 import com.sgp.gdsc_hackathon.user.Member;
 import com.sgp.gdsc_hackathon.user.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +27,7 @@ public class PostService {
     private final MemberService memberService;
 
     private final PostReceiverService postReceiverService;
+    private final PostToPostService postToPostService;
 
     private void sendPostToRandomUsers(int n, Post post) {
         Random random = new Random();
@@ -91,7 +96,34 @@ public class PostService {
         return postRepository.findById(postId).get();
     }
 
-    public List<PostResponseDto> findLinkedPosts(Long postId) {
+    private Optional<Post> getNextPost(Post curr) {
+        return postToPostService.getFrom(curr);
+    }
 
+    private List<PostLinkedResponseDto> findLinkedPosts(Post target) {
+        Optional<Post> _target = Optional.of(target);
+        List<PostLinkedResponseDto> res = new ArrayList<>();
+
+        while (_target.isPresent()) {
+            PostLinkedResponseDto cur = PostLinkedResponseDto.builder()
+                    .postContent(_target.get().getContent())
+                    .postId(_target.get().getId())
+                    .build();
+
+            res.add(cur);
+
+            _target = this.getNextPost(_target.get());
+        }
+        return res;
+    }
+
+    public List<List<PostLinkedResponseDto>> findAllLinkedPosts() {
+
+        Member author = memberService.findMember(getLoginUsername());
+        List<Post> receivedPosts = postRepository.findByMemberId(author);
+
+        return receivedPosts.stream()
+                .map(this::findLinkedPosts)
+                .collect(Collectors.toList());
     }
 }

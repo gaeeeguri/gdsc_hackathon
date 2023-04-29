@@ -3,6 +3,7 @@ package com.sgp.gdsc_hackathon.post;
 import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
 
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
+import com.sgp.gdsc_hackathon.post.dto.PostLinkedResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,5 +44,10 @@ public class PostController {
 
         Post fromPost = postService.getPostById(fromId);
         postToPostService.addRelation(fromPost, toPost);
+    }
+
+    @GetMapping("/posts/all")
+    public List<List<PostLinkedResponseDto>> getLinkedPosts() {
+        return postService.findAllLinkedPosts();
     }
 }
