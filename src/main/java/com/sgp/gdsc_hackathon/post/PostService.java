@@ -1,5 +1,6 @@
 package com.sgp.gdsc_hackathon.post;
 
+import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
 import com.sgp.gdsc_hackathon.postReceiver.PostReceiverService;
 import com.sgp.gdsc_hackathon.user.Member;
 import com.sgp.gdsc_hackathon.user.MemberService;
@@ -27,6 +28,10 @@ public class PostService {
         List<Member> receivers = new ArrayList<Member>();
 
         for (int i = 0; i < n; i++) {
+            if (users.size() == 0) {
+                break;
+            }
+
             int index = random.nextInt(users.size());
             receivers.add(users.get(index));
             users.remove(index);
@@ -36,13 +41,18 @@ public class PostService {
     }
 
     @Transactional
-    public Long upload(Post post) {
+    public Long upload(PostCreateDto post) {
         // TODO: add error handling
-        sendPostToRandomUsers(5, post);
+        Post newPost = new Post();
+        newPost.setContent(post.getContent());
 
-        postRepository.save(post);
+        Member writer = memberService.findMember(post.getMemberId());
+        newPost.setMember(writer);
+        sendPostToRandomUsers(5, newPost);
+        postRepository.save(newPost);
 
-        return post.getId();
+
+        return newPost.getId();
     }
 
 

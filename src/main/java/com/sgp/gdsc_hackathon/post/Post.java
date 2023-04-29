@@ -21,5 +21,13 @@ public class Post {
 
     private String content;
 
+
     // TODO: linked list 다음 게시글 확인할 수 있게 id 값 가지기
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
