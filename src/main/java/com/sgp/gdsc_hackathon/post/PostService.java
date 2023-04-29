@@ -144,4 +144,8 @@ public class PostService {
 
         return satisfiedPosts.stream().map(this::findLinkedPosts).collect(Collectors.toList());
     }
+
+    public List<PostLinkedResponseDto> findSingleLinkedPosts(Long postId) {
+        return findLinkedPosts(postRepository.findById(postId).get());
+    }
 }

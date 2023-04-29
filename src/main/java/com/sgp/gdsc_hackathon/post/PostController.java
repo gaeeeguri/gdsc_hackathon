@@ -56,4 +56,9 @@ public class PostController {
     public List<List<PostLinkedResponseDto>> getPublicPosts() {
         return postService.findPublicLinkedPosts();
     }
+
+    @GetMapping("/posts/{post_id}")
+    public List<PostLinkedResponseDto> getSingleLinkedPosts(@PathVariable("post_id") Long postId) {
+        return postService.findSingleLinkedPosts(postId);
+    }
 }
