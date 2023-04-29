@@ -15,15 +15,15 @@ public class PostController {
     private final PostService postService;
     private final PostToPostService postToPostService;
 
-    @GetMapping("/posts/{user_id}")
+    @GetMapping("/posts/{member_id}")
     @Operation(summary = "Get posts of a user", description = "Returns posts of given user id")
-    public Iterable<Post> getPosts(@PathVariable("user_id") Long userId) {
+    public Iterable<Post> getPosts(@PathVariable("member_id") Long userId) {
         return postService.findUserPosts(userId);
     }
 
-    @GetMapping("posts/receive/{user_id}")
-    public List<Post> getReceivedPosts(@PathVariable("user_id") Long userId) {
-        return postService.getReceivedPosts(userId);
+    @GetMapping("posts/receive/{member_id}")
+    public List<Post> getReceivedPosts(@PathVariable("member_id") Long memberId) {
+        return postService.getReceivedPosts(memberId);
     }
 
     @PostMapping("/posts")
