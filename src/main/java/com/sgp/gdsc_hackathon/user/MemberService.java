@@ -1,9 +1,16 @@
 package com.sgp.gdsc_hackathon.user;
 
 
+import com.sgp.gdsc_hackathon.post.Post;
+import com.sgp.gdsc_hackathon.post.PostRepository;
+import com.sgp.gdsc_hackathon.post.PostService;
 import com.sgp.gdsc_hackathon.security.JwtTokenProvider;
 import com.sgp.gdsc_hackathon.security.dto.TokenInfo;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,17 +22,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
+
 @Service
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
-
-    @Autowired
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PostRepository postRepository;
 
     public TokenInfo login(String memberId, String password) {
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
@@ -63,6 +71,20 @@ public class MemberService {
 
     public Member findMember(String username) {
         return memberRepository.findByUsername(username).get();
+    }
+
+    public Boolean didPost() {
+        Member member = memberRepository.findByUsername(getLoginUsername()).get();
+        List<Post> posts = postRepository.findAllByMember(member);
+
+        LocalDate today = LocalDate.now();
+
+        if (!posts.isEmpty()) {
+            posts.sort(Comparator.comparingLong(Post::getId));
+            return posts.get(posts.size() - 1).getCreatedAt().toLocalDate().equals(today);
+        }else {
+            return false;
+        }
     }
 
 //    public MemberInfo getUserInfo() {

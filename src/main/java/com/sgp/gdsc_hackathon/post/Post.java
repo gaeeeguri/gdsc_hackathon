@@ -6,6 +6,9 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,6 +25,17 @@ public class Post {
     private Member member;
 
     private String content;
+    private int depth;
+
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    public void setDepth(int depth) {
+        this.depth = depth;
+    }
+
+
 
 
     // TODO: linked list 다음 게시글 확인할 수 있게 id 값 가지기
@@ -32,4 +46,5 @@ public class Post {
     public void setContent(String content) {
         this.content = content;
     }
+
 }
