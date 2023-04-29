@@ -65,6 +65,7 @@ public class MemberController {
     }
 
     @GetMapping("/today")
+    @Operation(summary = "오늘 글 올렸는지 여부", description = "오늘 글 올렸다면 true를 return 하므로 더이상 글 생성하면 안됩니다.")
     public Boolean didPost() {
         return memberService.didPost();
     }

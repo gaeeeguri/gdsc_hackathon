@@ -9,6 +9,7 @@ import com.sgp.gdsc_hackathon.postReceiver.PostReceiverService;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
 import com.sgp.gdsc_hackathon.user.Member;
 import com.sgp.gdsc_hackathon.user.MemberService;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,6 +116,8 @@ public class PostService {
 
             _target = this.getPrevPost(_target);
         }
+
+        Collections.reverse(res);
         return res;
     }
 

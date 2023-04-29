@@ -3,6 +3,7 @@ package com.sgp.gdsc_hackathon.postToPost;
 import com.sgp.gdsc_hackathon.post.Post;
 import com.sgp.gdsc_hackathon.postReceiver.PostReceiver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,13 +12,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostToPostService {
     private final PostToPostRepository postToPostRepository;
 
 
     public void addRelation(Post fromPost, Post toPost) {
         PostToPost postToPost = new PostToPost();
-
+        log.error("fromPost: {}", fromPost.toString());
+        log.error("toPost: {}", toPost.toString());
         postToPost.setPrev(fromPost);
         postToPost.setNow(toPost);
         postToPostRepository.save(postToPost);

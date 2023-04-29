@@ -5,6 +5,7 @@ import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
 import com.sgp.gdsc_hackathon.post.dto.MyPostsReqDto;
 import com.sgp.gdsc_hackathon.post.dto.OnePostDto;
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
+import com.sgp.gdsc_hackathon.post.dto.PostLinkedResDto;
 import com.sgp.gdsc_hackathon.post.dto.PostLinkedResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostReceiveDetailResDto;
 import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
@@ -86,19 +87,33 @@ public class PostController {
             @ApiResponse(responseCode = "200", description = "내게 전송된 글들을 조회합니다.", content = @Content(schema = @Schema(implementation = PostReceiveDetailResDto.class))),
             @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
     public PostReceiveDetailResDto getLinkedPosts() {
-        List<List<PostLinkedResponseDto>> res = postService.findAllLinkedPosts();
+        List<List<PostLinkedResponseDto>> res = postService.findAllLinkedPostsNotAnswered();
         return PostReceiveDetailResDto.builder()
                 .postReceiveDetail(res)
                 .build();
+    }
 
     @GetMapping("/posts/public")
-    public List<List<PostLinkedResponseDto>> getPublicPosts() {
-        return postService.findPublicLinkedPosts();
+    @Operation(summary = "답변 10개 넘은 글들(피드글) 조회", description = "User와 상관없이 답변이 딱 10개 달린 글들을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "피드글들을 조회합니다.", content = @Content(schema = @Schema(implementation = PostReceiveDetailResDto.class))),
+            @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+    public PostReceiveDetailResDto getPublicPosts() {
+        List<List<PostLinkedResponseDto>> res = postService.findPublicLinkedPosts();
+        return PostReceiveDetailResDto.builder()
+                .postReceiveDetail(res)
+                .build();
     }
 
     @GetMapping("/posts/{post_id}")
-    public List<PostLinkedResponseDto> getSingleLinkedPosts(@PathVariable("post_id") Long postId) {
-        return postService.findSingleLinkedPosts(postId);
+    @Operation(summary = "특정 글 상세 조회", description = "User와 상관없이 {post_id}의 글을 상세히 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 글을 상세 조회합니다.", content = @Content(schema = @Schema(implementation = PostReceiveDetailResDto.class))),
+            @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+    public PostLinkedResDto getSingleLinkedPosts(@PathVariable("post_id") Long postId) {
+        List<PostLinkedResponseDto> res = postService.findSingleLinkedPosts(postId);
+        return PostLinkedResDto.builder()
+                .postLinked(res)
+                .build();
     }
-
 }

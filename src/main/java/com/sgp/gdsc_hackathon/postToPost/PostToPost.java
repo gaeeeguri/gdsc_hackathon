@@ -16,10 +16,13 @@ public class PostToPost {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", insertable = false, updatable = false)
+    @JoinColumn(name = "prev_id", referencedColumnName = "post_id", updatable = false)
     private Post prev;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", insertable = false, updatable = false)
+    @JoinColumn(name = "now_id", referencedColumnName = "post_id", updatable = false)
     private Post now;
+
+//    private Long prevId;
+//    private Long nowId;
 }
