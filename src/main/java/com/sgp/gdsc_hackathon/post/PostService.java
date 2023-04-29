@@ -70,6 +70,7 @@ public class PostService {
     public List<Post> findUserPosts() {
         String username = getLoginUsername();
         Member author = memberService.findMember(username);
+
         return postRepository.findAllByMember(author);
     }
 
