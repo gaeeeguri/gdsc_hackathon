@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="-130.0" y="219.5">com.sgp.gdsc_hackathon.post.Post</node>
+    <node x="-137.0" y="-56.5">com.sgp.gdsc_hackathon.user.User</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.sgp.gdsc_hackathon.post.Post" target="com.sgp.gdsc_hackathon.user.User" relationship="TO_ONE">
+      <point x="0.0" y="-104.5" />
+      <point x="0.0" y="80.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="1.0968379446640317" showDependencies="true" x="-84.73333333333335" y="178.38198198198194" />
+  <SelectedNodes>
+    <node>com.sgp.gdsc_hackathon.post.Post</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
