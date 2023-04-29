@@ -56,4 +56,8 @@ public class PostService {
         User user = userService.findUser(userId);
         return postReceiverService.getPostsbyUser(user);
     }
+
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId).get();
+    }
 }
