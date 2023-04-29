@@ -90,4 +90,7 @@ public class PostController {
                 .postReceiveDetail(res)
                 .build();
     }
+
+//    @GetMapping("/posts/{post_id}")
+
 }
