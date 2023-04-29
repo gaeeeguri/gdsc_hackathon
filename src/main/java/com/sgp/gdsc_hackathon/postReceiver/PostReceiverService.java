@@ -37,12 +37,17 @@ public class PostReceiverService {
     public List<Post> getPostsbyMember(Long id) {
         List<Post> ret = new ArrayList<>();
         log.error("멤버 아이디: {}", id);
-        postReceiverRepository.findByMemberId(id)
-                .forEach(PostReceiver -> {
+
+        List<PostReceiver> postReceivers = postReceiverRepository.findByMemberId(id);
+        if (postReceivers.isEmpty()) {
+            log.error("이 User가 받은 글이 없습니다.");
+            return new ArrayList<>();
+        }
+
+        postReceivers.forEach(PostReceiver -> {
                     log.error("포스트 아이디: {}", PostReceiver.getPost().getId());
                     ret.add(PostReceiver.getPost());
                 });
-        log.error("getPostsbyMember: {}", ret.get(0).toString());
         return ret;
     }
 

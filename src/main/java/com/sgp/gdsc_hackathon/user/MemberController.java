@@ -32,9 +32,9 @@ public class MemberController {
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "회원가입을 합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입 성공 : username을 보냅니다.", content = @Content(schema = @Schema(implementation = UserRes.class))),
-            @ApiResponse(responseCode = "406", description = "회원가입 실패 : username(ID)는 겹쳐도 되지만, 닉네임은 유일해야합니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
-    public String signup(@RequestBody SignUpDto signUpDto) {
+            @ApiResponse(responseCode = "200", description = "회원가입 성공 : username을 message에 담아 보냅니다.", content = @Content(schema = @Schema(implementation = UserRes.class))),
+            @ApiResponse(responseCode = "406", description = "회원가입 실패 : username(ID)이 중복됩니다. 다른 ID를 써주세요.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+    public UserRes signup(@RequestBody SignUpDto signUpDto) {
         String username;
         try {
             username = memberService.signup(signUpDto);
@@ -43,14 +43,16 @@ public class MemberController {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "회원가입 실패", e);
         }
 
-        return username;
+        return UserRes.builder()
+                .message(username)
+                .build();
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인을 합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공 : username을 보냅니다.", content = @Content(schema = @Schema(implementation = UserRes.class))),
-            @ApiResponse(responseCode = "406", description = "로그인 실패 : username(ID)는 겹쳐도 되지만, 닉네임은 유일해야합니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+            @ApiResponse(responseCode = "200", description = "로그인 성공 : username을 보냅니다.", content = @Content(schema = @Schema(implementation = TokenInfo.class))),
+            @ApiResponse(responseCode = "406", description = "로그인 실패 : ID, PW가 다릅니다..", content = @Content(schema = @Schema(implementation = UserRes.class)))})
     public TokenInfo login(@RequestBody LoginReqDto loginReqDto) {
         TokenInfo tokeninfo;
         try {
