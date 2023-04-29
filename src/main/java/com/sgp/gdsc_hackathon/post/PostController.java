@@ -3,6 +3,7 @@ package com.sgp.gdsc_hackathon.post;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
+// TODO: add error handling
 @RestController
 public class PostController {
     private final PostService postService;
