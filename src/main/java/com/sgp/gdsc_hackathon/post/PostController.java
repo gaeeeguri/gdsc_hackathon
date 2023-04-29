@@ -33,10 +33,11 @@ public class PostController {
     }
 
     @PostMapping("/posts/{from_id}")
-    public void addPost(@PathVariable("from_id") Long fromId, @RequestBody Post post) {
-        this.createPost(post);
+    public void appendPost(@PathVariable("from_id") Long fromId, @RequestBody PostCreateDto postCreateDto) {
+        Long toPostId = this.createPost(postCreateDto);
+        Post toPost = postService.getPostById(toPostId);
 
         Post fromPost = postService.getPostById(fromId);
-        postToPostService.addRelation(fromPost, post);
+        postToPostService.addRelation(fromPost, toPost);
     }
 }
