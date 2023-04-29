@@ -1,5 +1,6 @@
 package com.sgp.gdsc_hackathon.post;
 
+import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class PostController {
 
     @PostMapping("/posts")
     @Operation(summary = "create post", description = "Create a new post and return id")
-    public Long createPost(@RequestBody Post post) {
+    public Long createPost(@RequestBody PostCreateDto post) {
         return postService.upload(post);
     }
 
