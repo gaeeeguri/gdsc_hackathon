@@ -1,13 +1,37 @@
 spring:
   # in-memory database for testing
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password:
+
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    driver-class-name=com:
+      com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/hackathon?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC-8&characterEncoding=UTF-8
+    username: gdsc1
+    password: gdsc1004
 
+  output:
+    ansi:
+      enabled: always
 
-debug: true
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+
 
 springdoc:
   api-docs:

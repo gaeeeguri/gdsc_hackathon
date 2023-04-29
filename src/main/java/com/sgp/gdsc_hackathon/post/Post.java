@@ -1,2 +1,4 @@
-package com.sgp.gdsc_hackathon.post;public class Post {
+package com.sgp.gdsc_hackathon.post;
+
+public class Post {
 }

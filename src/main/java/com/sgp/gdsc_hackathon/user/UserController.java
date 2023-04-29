@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 public class UserController {
+    @Autowired
     private final UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
