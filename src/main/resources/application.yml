@@ -39,3 +39,8 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /api-doc
+
+jwt:
+  secret: 11dd74abf54577dc25227b88114cfe6e2fb3701e4583a7f7cc6aac060c2f2061f524a8b5faf205d033cc1e631134841341120ad099a4cda9785ff7389b632621
+  expiration: 86400000
+  prefix: Bearer
