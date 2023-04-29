@@ -3,6 +3,7 @@ package com.sgp.gdsc_hackathon.post;
 import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
 
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
+import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
 import com.sgp.gdsc_hackathon.postReceiver.PostReceiverService;
 import com.sgp.gdsc_hackathon.user.Member;
 import com.sgp.gdsc_hackathon.user.MemberService;
@@ -68,10 +69,22 @@ public class PostService {
         return postRepository.findByMemberId(author);
     }
 
-    public List<Post> getReceivedPosts() {
+    public List<PostResponseDto> getReceivedPosts() {
         String username = getLoginUsername();
         Member member = memberService.findMember(username);
-        return postReceiverService.getPostsbyMember(member.getId());
+        List<Post> posts =  postReceiverService.getPostsbyMember(member.getId());
+
+        List<PostResponseDto> res = new ArrayList<>();
+
+        posts.forEach(post -> {
+            PostResponseDto dto = PostResponseDto.builder()
+                    .postContent(post.getContent())
+                    .receiverId(member.getId())
+                    .postId(post.getId())
+                    .build();
+            res.add(dto);
+        });
+        return res;
     }
 
     public Post getPostById(Long postId) {

@@ -3,6 +3,7 @@ package com.sgp.gdsc_hackathon.post;
 import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
 
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
+import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class PostController {
     }
 
     @GetMapping("posts/receive")
-    public List<Post> getReceivedPosts() {
+    public List<PostResponseDto> getReceivedPosts() {
         return postService.getReceivedPosts();
     }
 
