@@ -27,12 +27,15 @@ public class PostService {
 
         List<Member> receivers = new ArrayList<Member>();
 
-        for (int i = 0; i < n; i++) {
+        users.remove(post);
+
+        while (receivers.size() <= n) {
             if (users.size() == 0) {
                 break;
             }
 
             int index = random.nextInt(users.size());
+
             receivers.add(users.get(index));
             users.remove(index);
         }
