@@ -30,7 +30,7 @@ public class PostService {
 
         List<Member> receivers = new ArrayList<Member>();
 
-        users.remove(post);
+        users.remove(memberService.findMember(getLoginUsername()));
 
         while (receivers.size() <= n) {
             if (users.size() == 0) {
@@ -89,5 +89,9 @@ public class PostService {
 
     public Post getPostById(Long postId) {
         return postRepository.findById(postId).get();
+    }
+
+    public List<PostResponseDto> findLinkedPosts(Long postId) {
+
     }
 }
