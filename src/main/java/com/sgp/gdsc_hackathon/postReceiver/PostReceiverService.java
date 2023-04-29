@@ -1,11 +1,10 @@
 package com.sgp.gdsc_hackathon.postReceiver;
 
 import com.sgp.gdsc_hackathon.post.Post;
-import com.sgp.gdsc_hackathon.user.User;
+import com.sgp.gdsc_hackathon.user.Member;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,18 +18,18 @@ public class PostReceiverService {
 
 
     @Transactional
-    public void addReceivers(List<User> receiverIds, Post post) {
+    public void addReceivers(List<Member> receiverIds, Post post) {
         receiverIds.forEach(receiver -> {
             PostReceiver postReceiver = new PostReceiver();
             postReceiver.setPost(post);
-            postReceiver.setUser(receiver);
+            postReceiver.setMember(receiver);
 
             postReceiverRepository.save(postReceiver);
             }
         );
     }
 
-    public List<Post> getPostsbyUser(User user) {
-        return postReceiverRepository.findByUser(user);
+    public List<Post> getPostsbyMember(Member member) {
+        return postReceiverRepository.findByMember(member);
     }
 }
