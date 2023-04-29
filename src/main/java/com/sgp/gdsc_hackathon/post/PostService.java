@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -71,7 +70,7 @@ public class PostService {
     public List<Post> findUserPosts() {
         String username = getLoginUsername();
         Member author = memberService.findMember(username);
-        return postRepository.findByMemberId(author);
+        return postRepository.findAllByMember(author);
     }
 
     public List<PostResponseDto> getReceivedPosts() {
@@ -96,34 +95,33 @@ public class PostService {
         return postRepository.findById(postId).get();
     }
 
-    private Optional<Post> getNextPost(Post curr) {
-        return postToPostService.getFrom(curr);
+    private Post getPrevPost(Post curr) {
+        return postToPostService.getPrev(curr);
     }
 
     private List<PostLinkedResponseDto> findLinkedPosts(Post target) {
-        Optional<Post> _target = Optional.of(target);
+        Post _target = target;
         List<PostLinkedResponseDto> res = new ArrayList<>();
 
-        while (_target.isPresent()) {
+        while (_target != null) {
             PostLinkedResponseDto cur = PostLinkedResponseDto.builder()
-                    .postContent(_target.get().getContent())
-                    .postId(_target.get().getId())
+                    .postContent(_target.getContent())
+                    .postId(_target.getId())
                     .build();
 
             res.add(cur);
 
-            _target = this.getNextPost(_target.get());
+            _target = this.getPrevPost(_target);
         }
         return res;
     }
 
     public List<List<PostLinkedResponseDto>> findAllLinkedPosts() {
 
-        Member author = memberService.findMember(getLoginUsername());
-        List<Post> receivedPosts = postRepository.findByMemberId(author);
+        Member receiver = memberService.findMember(getLoginUsername());
+        List<Post> receivedPosts = postReceiverService.getPostsByReceiver(receiver);
 
         return receivedPosts.stream()
-                .map(this::findLinkedPosts)
-                .collect(Collectors.toList());
+                .map(this::findLinkedPosts).collect(Collectors.toList());
     }
 }

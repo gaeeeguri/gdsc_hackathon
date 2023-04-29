@@ -1,10 +1,13 @@
 package com.sgp.gdsc_hackathon.postToPost;
 
 import com.sgp.gdsc_hackathon.post.Post;
+import com.sgp.gdsc_hackathon.postReceiver.PostReceiver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -15,12 +18,27 @@ public class PostToPostService {
     public void addRelation(Post fromPost, Post toPost) {
         PostToPost postToPost = new PostToPost();
 
-        postToPost.setFrom(fromPost);
-        postToPost.setTo(toPost);
+        postToPost.setPrev(fromPost);
+        postToPost.setNow(toPost);
         postToPostRepository.save(postToPost);
     }
 
-    public Optional<Post> getFrom(Post toPost) {
-        return postToPostRepository.getFromByTo(toPost);
+    public Post getPrev(Post nowPost) {
+
+        Optional<PostToPost> prevPost = postToPostRepository.findByNow(nowPost);
+
+        if (prevPost.isPresent()) {
+            return prevPost.get().getPrev();
+        } else {
+            return null;
+        }
+    }
+
+    public Post getByTo(Post now) {
+        return postToPostRepository.findByNow(now).get().getPrev();
+    }
+    public List<Post> getByNows(List<PostReceiver> postReceiver) {
+        List<Post> nows = postReceiver.stream().map(p -> p.getPost()).collect(Collectors.toList());
+        return postToPostRepository.findAllByNowIn(nows).stream().map(postToPost -> postToPost.getPrev()).collect(Collectors.toList());
     }
 }

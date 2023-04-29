@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PostReceiverRepository extends JpaRepository<PostReceiver, Long> {
     List<PostReceiver> findByMemberId(Long id);
+
+    List<PostReceiver> findAllByMember(Member receiver);
 }
