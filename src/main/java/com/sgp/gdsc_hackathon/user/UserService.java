@@ -14,7 +14,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public Iterable<User> findUsers() {
+    public List<User> findUsers() {
         return userRepository.findAll();
     }
 
@@ -30,5 +30,9 @@ public class UserService {
         validateDuplication(user);
         userRepository.save(user);
         return user.getId();
+    }
+
+    public User findUser(Long userId) {
+        return userRepository.findById(userId).get();
     }
 }
