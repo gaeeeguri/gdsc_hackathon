@@ -14,8 +14,11 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // TODO: review ??
     @JoinColumn(name = "user_id")
     private User user;
 
     private String content;
+
+    // TODO: linked list 다음 게시글 확인할 수 있게 id 값 가지기
 }

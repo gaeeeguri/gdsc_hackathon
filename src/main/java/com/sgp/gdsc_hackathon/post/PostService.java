@@ -19,6 +19,8 @@ public class PostService {
     @Transactional
     public Long upload(Post post) {
         postRepository.save(post);
+
+        // TODO: add send logic
         return post.getId();
     }
 
