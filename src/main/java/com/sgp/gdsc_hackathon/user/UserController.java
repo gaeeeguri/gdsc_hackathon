@@ -1,21 +1,31 @@
 package com.sgp.gdsc_hackathon.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/users")
+    @Operation(summary = "get users", description = "Returns all users")
     public Iterable<User> getUsers() {
-        return userRepository.findAll();
+        return userService.findUsers();
+    }
+
+    @PostMapping("/users")
+    @Operation(summary = "create user", description = "Create a new user and returns id")
+    public Long createUser(@RequestBody User user) {
+        return userService.join(user);
     }
 }

@@ -4,10 +4,11 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "member")
 @Getter
 public class User {
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
