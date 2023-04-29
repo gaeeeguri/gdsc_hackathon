@@ -2,10 +2,20 @@ package com.sgp.gdsc_hackathon.post;
 
 import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
 
+import com.sgp.gdsc_hackathon.post.dto.MyPostsReqDto;
+import com.sgp.gdsc_hackathon.post.dto.OnePostDto;
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
 import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
+import com.sgp.gdsc_hackathon.post.dto.PostsReceiveResDto;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
+import com.sgp.gdsc_hackathon.security.dto.TokenInfo;
+import com.sgp.gdsc_hackathon.user.UserRes;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,24 +29,45 @@ public class PostController {
     private final PostToPostService postToPostService;
 
     @GetMapping("/posts")
-    @Operation(summary = "Get posts of a user", description = "Returns posts of given user id")
-    public Iterable<Post> getPosts() {
-        return postService.findUserPosts();
+    @Operation(summary = "내가 쓴 글 조회", description = "로그인한 User가 작성한 게시글들을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내가 작성한 글들 조회합니다.", content = @Content(schema = @Schema(implementation = MyPostsReqDto.class))),
+            @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+    public MyPostsReqDto getPosts() {
+        List<Post> posts = postService.findUserPosts();
+        List<OnePostDto> summPosts = new ArrayList<>();
+        for (Post post : posts) {
+            summPosts.add(OnePostDto.builder()
+                    .postId(post.getId())
+                    .content(post.getContent())
+                    .build());
+        }
+        return MyPostsReqDto.builder()
+                .posts(summPosts)
+                .build();
     }
 
     @GetMapping("posts/receive")
-    public List<PostResponseDto> getReceivedPosts() {
-        return postService.getReceivedPosts();
+    @Operation(summary = "내가 받은 글들 조회", description = "로그인한 User가 받은 게시글들을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "내게 전송된 글들을 조회합니다.", content = @Content(schema = @Schema(implementation = PostsReceiveResDto.class))),
+            @ApiResponse(responseCode = "406", description = "어딘가 실패했습니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
+    public PostsReceiveResDto getReceivedPosts() {
+        List<PostResponseDto> posts = postService.getReceivedPosts();
+        return PostsReceiveResDto.builder()
+                .posts(posts)
+                .build();
     }
 
     @PostMapping("/posts")
-    @Operation(summary = "create post", description = "Create a new post and return id")
+    @Operation(summary = "글 생성", description = "새 글을 생성해 5명에게 전파한 후, 글의 ID를 반환합니다.")
     public Long createPost(@RequestBody PostCreateDto post) {
         String username = getLoginUsername();
         return postService.upload(post, username);
     }
 
     @PostMapping("/posts/{from_id}")
+    @Operation(summary = "특정 글에 글 추가", description = "{from_id}를 가진 글에 새로운 글을 달고, 5명에게 전파합니다. 반환은 없습니다.")
     public void appendPost(@PathVariable("from_id") Long fromId, @RequestBody PostCreateDto postCreateDto) {
         Long toPostId = this.createPost(postCreateDto);
         Post toPost = postService.getPostById(toPostId);

@@ -66,7 +66,7 @@ public class PostService {
     public List<Post> findUserPosts() {
         String username = getLoginUsername();
         Member author = memberService.findMember(username);
-        return postRepository.findByMemberId(author);
+        return postRepository.findByMemberId(author.getId());
     }
 
     public List<PostResponseDto> getReceivedPosts() {
@@ -89,9 +89,5 @@ public class PostService {
 
     public Post getPostById(Long postId) {
         return postRepository.findById(postId).get();
-    }
-
-    public List<PostResponseDto> findLinkedPosts(Long postId) {
-
     }
 }
