@@ -25,7 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    @Column(name = "member_id")
+    private Long id;
     @NotNull
     @Column(name = "username", unique = true)
     private String username; // ID

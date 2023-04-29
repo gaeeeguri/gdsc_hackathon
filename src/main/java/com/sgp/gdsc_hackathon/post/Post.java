@@ -1,7 +1,7 @@
 package com.sgp.gdsc_hackathon.post;
 
 
-import com.sgp.gdsc_hackathon.user.User;
+import com.sgp.gdsc_hackathon.user.Member;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -16,8 +16,8 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     // TODO: review ??
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private String content;
 

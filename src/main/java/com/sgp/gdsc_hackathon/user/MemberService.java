@@ -57,6 +57,14 @@ public class MemberService {
         return savedMember.getUsername();
     }
 
+    public List<Member> findMembers() {
+        return memberRepository.findAll();
+    }
+
+    public Member findMember(Long memberId) {
+        return memberRepository.findById(memberId).get();
+    }
+
 //    public MemberInfo getUserInfo() {
 //        Member member = memberRepository.findByUsername(SecurityUtil.getLoginUsername()).orElseThrow(
 //                () -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
