@@ -5,5 +5,4 @@ import lombok.Data;
 @Data
 public class PostCreateDto {
     private String content;
-    private Long memberId;
 }

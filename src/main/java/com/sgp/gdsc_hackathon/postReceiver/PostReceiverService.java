@@ -2,11 +2,15 @@ package com.sgp.gdsc_hackathon.postReceiver;
 
 import com.sgp.gdsc_hackathon.post.Post;
 import com.sgp.gdsc_hackathon.user.Member;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 public class PostReceiverService {
     private final PostReceiverRepository postReceiverRepository;
@@ -29,7 +33,15 @@ public class PostReceiverService {
         );
     }
 
-    public List<Post> getPostsbyMember(Member member) {
-        return postReceiverRepository.findByMember(member);
+    public List<Post> getPostsbyMember(Long id) {
+        List<Post> ret = new ArrayList<>();
+        log.error("멤버 아이디: {}", id);
+        postReceiverRepository.findByMemberId(id)
+                .forEach(PostReceiver -> {
+                    log.error("포스트 아이디: {}", PostReceiver.getPost().getId());
+                    ret.add(PostReceiver.getPost());
+                });
+        log.error("getPostsbyMember: {}", ret.get(0).toString());
+        return ret;
     }
 }

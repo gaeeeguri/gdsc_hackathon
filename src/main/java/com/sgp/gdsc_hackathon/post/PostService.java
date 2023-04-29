@@ -1,5 +1,7 @@
 package com.sgp.gdsc_hackathon.post;
 
+import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
+
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
 import com.sgp.gdsc_hackathon.postReceiver.PostReceiverService;
 import com.sgp.gdsc_hackathon.user.Member;
@@ -41,12 +43,12 @@ public class PostService {
     }
 
     @Transactional
-    public Long upload(PostCreateDto post) {
+    public Long upload(PostCreateDto post, String username) {
         // TODO: add error handling
         Post newPost = new Post();
         newPost.setContent(post.getContent());
 
-        Member writer = memberService.findMember(post.getMemberId());
+        Member writer = memberService.findMember(username);
         newPost.setMember(writer);
         sendPostToRandomUsers(5, newPost);
         postRepository.save(newPost);
@@ -57,14 +59,16 @@ public class PostService {
 
 
     // TODO: review required
-    public List<Post> findUserPosts(Long userId) {
-        Member author = memberService.findMember(userId);
+    public List<Post> findUserPosts() {
+        String username = getLoginUsername();
+        Member author = memberService.findMember(username);
         return postRepository.findByMemberId(author);
     }
 
-    public List<Post> getReceivedPosts(Long userId) {
-        Member member = memberService.findMember(userId);
-        return postReceiverService.getPostsbyMember(member);
+    public List<Post> getReceivedPosts() {
+        String username = getLoginUsername();
+        Member member = memberService.findMember(username);
+        return postReceiverService.getPostsbyMember(member.getId());
     }
 
     public Post getPostById(Long postId) {
