@@ -11,7 +11,7 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/posts/{user_id}}")
+    @GetMapping("/posts/{user_id}")
     public Iterable<Post> getPosts(@PathVariable("user_id") Long userId) {
         return postService.findUserPosts(userId);
     }

@@ -19,7 +19,7 @@ public class UserService {
     }
 
     private void validateDuplication(User user) {
-        List<User> findUsers = userRepository.findByUserName(user.getUsername());
+        List<User> findUsers = userRepository.findByUsername(user.getUsername());
         if (!findUsers.isEmpty()) {
             throw new IllegalStateException("User already exists.");
         }

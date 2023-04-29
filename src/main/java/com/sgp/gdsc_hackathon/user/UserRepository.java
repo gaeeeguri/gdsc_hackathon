@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-    User findByTheUserName(String username);
-    List<User> findByUserName(String username);
+    List<User> findByUsername(String username);
 
-    Long removeByUserName(String username);
 }

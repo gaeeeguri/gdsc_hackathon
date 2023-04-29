@@ -22,6 +22,8 @@ public class PostService {
         return post.getId();
     }
 
+
+    // TODO: review required
     public Iterable<Post> findUserPosts(Long userId) {
         Optional<User> author = userRepository.findById(userId);
         return postRepository.findByUser(author.get());
