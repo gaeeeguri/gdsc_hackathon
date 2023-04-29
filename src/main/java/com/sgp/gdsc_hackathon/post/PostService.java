@@ -2,7 +2,6 @@ package com.sgp.gdsc_hackathon.post;
 
 import com.sgp.gdsc_hackathon.postReceiver.PostReceiverService;
 import com.sgp.gdsc_hackathon.user.User;
-import com.sgp.gdsc_hackathon.user.UserRepository;
 import com.sgp.gdsc_hackathon.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -52,5 +50,10 @@ public class PostService {
     public Iterable<Post> findUserPosts(Long userId) {
         User author = userService.findUser(userId);
         return postRepository.findByUser(author);
+    }
+
+    public List<Post> getReceivedPosts(Long userId) {
+        User user = userService.findUser(userId);
+        return postReceiverService.getPostsbyUser(user);
     }
 }

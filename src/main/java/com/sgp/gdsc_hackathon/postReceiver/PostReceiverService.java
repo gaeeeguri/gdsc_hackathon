@@ -18,6 +18,7 @@ public class PostReceiverService {
     }
 
 
+    @Transactional
     public void addReceivers(List<User> receiverIds, Post post) {
         receiverIds.forEach(receiver -> {
             PostReceiver postReceiver = new PostReceiver();
@@ -27,5 +28,9 @@ public class PostReceiverService {
             postReceiverRepository.save(postReceiver);
             }
         );
+    }
+
+    public List<Post> getPostsbyUser(User user) {
+        return postReceiverRepository.findByUser(user);
     }
 }
