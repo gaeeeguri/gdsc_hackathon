@@ -5,6 +5,7 @@ import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
 import com.sgp.gdsc_hackathon.post.dto.MyPostsReqDto;
 import com.sgp.gdsc_hackathon.post.dto.OnePostDto;
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
+import com.sgp.gdsc_hackathon.post.dto.PostLinkedResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostsReceiveResDto;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
@@ -74,5 +75,10 @@ public class PostController {
 
         Post fromPost = postService.getPostById(fromId);
         postToPostService.addRelation(fromPost, toPost);
+    }
+
+    @GetMapping("/posts/all")
+    public List<List<PostLinkedResponseDto>> getLinkedPosts() {
+        return postService.findAllLinkedPosts();
     }
 }

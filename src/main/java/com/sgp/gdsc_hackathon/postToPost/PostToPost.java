@@ -17,9 +17,9 @@ public class PostToPost {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", insertable = false, updatable = false)
-    private Post from;
+    private Post prev;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", insertable = false, updatable = false)
-    private Post to;
+    private Post now;
 }

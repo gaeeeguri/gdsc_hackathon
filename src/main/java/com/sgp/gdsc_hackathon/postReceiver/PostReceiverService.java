@@ -5,6 +5,7 @@ import com.sgp.gdsc_hackathon.user.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,5 +49,12 @@ public class PostReceiverService {
                     ret.add(PostReceiver.getPost());
                 });
         return ret;
+    }
+
+    public List<Post> getPostsByReceiver(Member receiver) {
+        return postReceiverRepository.findAllByMember(receiver)
+                .stream()
+                .map(postToPost -> postToPost.getPost())
+                .collect(Collectors.toList());
     }
 }
