@@ -41,4 +41,8 @@ public class PostToPostService {
         List<Post> nows = postReceiver.stream().map(p -> p.getPost()).collect(Collectors.toList());
         return postToPostRepository.findAllByNowIn(nows).stream().map(postToPost -> postToPost.getPrev()).collect(Collectors.toList());
     }
+
+    public List<Post> getNowByPrev(Post post) {
+        return postToPostRepository.findByPrev(post).stream().map(postToPost -> postToPost.getPrev()).collect(Collectors.toList());
+    }
 }

@@ -51,13 +51,14 @@ public class PostService {
     }
 
     @Transactional
-    public Long upload(PostCreateDto post, String username) {
+    public Long upload(PostCreateDto post, String username, int depth) {
         // TODO: add error handling
         Post newPost = new Post();
         newPost.setContent(post.getContent());
 
         Member writer = memberService.findMember(username);
         newPost.setMember(writer);
+        newPost.setDepth(depth);
         sendPostToRandomUsers(5, newPost);
         postRepository.save(newPost);
 
@@ -116,12 +117,31 @@ public class PostService {
         return res;
     }
 
-    public List<List<PostLinkedResponseDto>> findAllLinkedPosts() {
+    private Boolean notAnsweredPost(Post post) {
+        List<Post> answers = postToPostService.getNowByPrev(post);
+
+        for (Post p : answers) {
+            if (p.getMember() == memberService.findMember(getLoginUsername())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public List<List<PostLinkedResponseDto>> findAllLinkedPostsNotAnswered() {
 
         Member receiver = memberService.findMember(getLoginUsername());
         List<Post> receivedPosts = postReceiverService.getPostsByReceiver(receiver);
 
         return receivedPosts.stream()
+                .filter(this::notAnsweredPost)
                 .map(this::findLinkedPosts).collect(Collectors.toList());
+    }
+
+    public List<List<PostLinkedResponseDto>> findPublicLinkedPosts() {
+        List<Post> satisfiedPosts = postRepository.findAllByDepth(10);
+
+        return satisfiedPosts.stream().map(this::findLinkedPosts).collect(Collectors.toList());
     }
 }

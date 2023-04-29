@@ -34,20 +34,26 @@ public class PostController {
     @Operation(summary = "create post", description = "Create a new post and return id")
     public Long createPost(@RequestBody PostCreateDto post) {
         String username = getLoginUsername();
-        return postService.upload(post, username);
+        return postService.upload(post, username, 0);
     }
 
     @PostMapping("/posts/{from_id}")
     public void appendPost(@PathVariable("from_id") Long fromId, @RequestBody PostCreateDto postCreateDto) {
-        Long toPostId = this.createPost(postCreateDto);
+        String username = getLoginUsername();
+        Post prev = postService.getPostById(fromId);
+        Long toPostId = postService.upload(postCreateDto, username, prev.getDepth() + 1);
         Post toPost = postService.getPostById(toPostId);
 
-        Post fromPost = postService.getPostById(fromId);
-        postToPostService.addRelation(fromPost, toPost);
+        postToPostService.addRelation(prev, toPost);
     }
 
     @GetMapping("/posts/all")
     public List<List<PostLinkedResponseDto>> getLinkedPosts() {
-        return postService.findAllLinkedPosts();
+        return postService.findAllLinkedPostsNotAnswered();
+    }
+
+    @GetMapping("/posts/public")
+    public List<List<PostLinkedResponseDto>> getPublicPosts() {
+        return postService.findPublicLinkedPosts();
     }
 }

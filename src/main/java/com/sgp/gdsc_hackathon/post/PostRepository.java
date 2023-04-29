@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findAllByMember(Member author);
+
+    List<Post> findAllByDepth(int depth);
 }
