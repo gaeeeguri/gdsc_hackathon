@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PostReceiverRepository extends JpaRepository<PostReceiver, Long> {
-    public List<Post> findByMember(Member member);
+    List<PostReceiver> findByMemberId(Long id);
 }

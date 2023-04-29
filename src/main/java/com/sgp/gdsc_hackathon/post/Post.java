@@ -5,9 +5,11 @@ import com.sgp.gdsc_hackathon.user.Member;
 import lombok.Getter;
 
 import javax.persistence.*;
+import lombok.ToString;
 
 @Entity
 @Getter
+@ToString
 public class Post {
     @Id
     @Column(name = "post_id")

@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -27,7 +27,6 @@ public class MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Transactional
     public TokenInfo login(String memberId, String password) {
         // 1. Login ID/PW 를 기반으로 Authentication 객체 생성
         // 이때 authentication 는 인증 여부를 확인하는 authenticated 값이 false
@@ -43,14 +42,15 @@ public class MemberService {
         return tokenInfo;
     }
 
+    @Transactional
     public String signup(SignUpDto signUpDto) {
         Member member = signUpDto.toEntity();
         member.addUserAuthority();
 
         member.encodePassword(passwordEncoder);
 
-        if(memberRepository.findByNickname(signUpDto.getNickname()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 닉네임입니다.");
+        if(memberRepository.findByUsername(signUpDto.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 ID 입니다.");
         }
 
         Member savedMember = memberRepository.save(member);
@@ -61,8 +61,8 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public Member findMember(Long memberId) {
-        return memberRepository.findById(memberId).get();
+    public Member findMember(String username) {
+        return memberRepository.findByUsername(username).get();
     }
 
 //    public MemberInfo getUserInfo() {

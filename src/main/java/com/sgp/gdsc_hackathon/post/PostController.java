@@ -1,5 +1,7 @@
 package com.sgp.gdsc_hackathon.post;
 
+import static com.sgp.gdsc_hackathon.global.SecurityUtil.getLoginUsername;
+
 import com.sgp.gdsc_hackathon.post.dto.PostCreateDto;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,21 +17,22 @@ public class PostController {
     private final PostService postService;
     private final PostToPostService postToPostService;
 
-    @GetMapping("/posts/{member_id}")
+    @GetMapping("/posts")
     @Operation(summary = "Get posts of a user", description = "Returns posts of given user id")
-    public Iterable<Post> getPosts(@PathVariable("member_id") Long userId) {
-        return postService.findUserPosts(userId);
+    public Iterable<Post> getPosts() {
+        return postService.findUserPosts();
     }
 
-    @GetMapping("posts/receive/{member_id}")
-    public List<Post> getReceivedPosts(@PathVariable("member_id") Long memberId) {
-        return postService.getReceivedPosts(memberId);
+    @GetMapping("posts/receive")
+    public List<Post> getReceivedPosts() {
+        return postService.getReceivedPosts();
     }
 
     @PostMapping("/posts")
     @Operation(summary = "create post", description = "Create a new post and return id")
     public Long createPost(@RequestBody PostCreateDto post) {
-        return postService.upload(post);
+        String username = getLoginUsername();
+        return postService.upload(post, username);
     }
 
     @PostMapping("/posts/{from_id}")
