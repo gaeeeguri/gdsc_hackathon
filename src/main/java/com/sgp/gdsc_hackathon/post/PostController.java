@@ -20,9 +20,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.server.ResponseStatusException;
 
 // TODO: add error handling
 @RestController
@@ -59,10 +61,16 @@ public class PostController {
     }
 
     @PostMapping("/posts/{from_id}")
-    @Operation(summary = "특정 글에 글 추가", description = "{from_id}를 가진 글에 새로운 글을 달고, 5명에게 전파합니다. 반환은 없습니다.")
+    @Operation(summary = "특정 글에 글 추가", description = "{from_id}를 가진 글이 10미만 depth라면 새로운 글을 달고, 5명에게 전파합니다. 반환은 없습니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 글에 글을 추가합니다."),
+            @ApiResponse(responseCode = "406", description = "글의 depth가 10이라 덧글 추가가 불가합니다.", content = @Content(schema = @Schema(implementation = UserRes.class)))})
     public void appendPost(@PathVariable("from_id") Long fromId, @RequestBody PostCreateDto postCreateDto) {
         String username = getLoginUsername();
         Post prev = postService.getPostById(fromId);
+        if (prev.getDepth() == 10) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "글의 depth가 10이라 덧글 작성이 불가합니다.");
+        }
         Long toPostId = postService.upload(postCreateDto, username, prev.getDepth() + 1);
         Post toPost = postService.getPostById(toPostId);
 
