@@ -1,14 +1,21 @@
 package com.sgp.gdsc_hackathon.postToPost;
 
 import com.sgp.gdsc_hackathon.post.Post;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import lombok.ToString;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class PostToPost {
     @Id
     @Column

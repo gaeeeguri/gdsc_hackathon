@@ -54,4 +54,9 @@ INSERT INTO post_to_post (prev_id, now_id) VALUES (19, 20);
 INSERT INTO post_to_post (prev_id, now_id) VALUES (20, 21);
 
 
-INSERT INTO post_receiver (member_id, post_id) VALUES (6, 1);
+INSERT INTO post (created_at, content, member_id, depth) VALUES ('2023-04-29T12:36:06.702025', '저는 요즘 날도 따듯해서 우리 까미랑 산책나가는게 인생 가장 행복입니다. 젋을때는 많이 돌아다녔는데 요즘은 산책만 가도 힘드네요 ㅎㅎ... 젊은이들~ 부러워 ~~^ ^', 1, 1);
+INSERT INTO post (created_at, content, member_id, depth) VALUES ('2023-04-29T12:36:06.702025', '어제 광주에서 해커톤 진행하느라 한숨도 못잤는데, 그래도 뭔가 나오는 것 같아 아주 뿌듯해요 ㅎㅎ !! 뭔가에 집중할때, 많이 배우는 것 같아요', 1, 1);
+
+INSERT INTO post_receiver (member_id, post_id) VALUES (1, 22);
+INSERT INTO post_receiver (member_id, post_id) VALUES (1, 23);
+INSERT INTO post_receiver (member_id, post_id) VALUES (1, 1);

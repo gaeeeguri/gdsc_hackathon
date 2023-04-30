@@ -10,8 +10,10 @@ import com.sgp.gdsc_hackathon.post.dto.PostLinkedResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostReceiveDetailResDto;
 import com.sgp.gdsc_hackathon.post.dto.PostResponseDto;
 import com.sgp.gdsc_hackathon.post.dto.PostsReceiveResDto;
+import com.sgp.gdsc_hackathon.postReceiver.PostReceiverRepository;
 import com.sgp.gdsc_hackathon.postToPost.PostToPostService;
 import com.sgp.gdsc_hackathon.security.dto.TokenInfo;
+import com.sgp.gdsc_hackathon.user.MemberRepository;
 import com.sgp.gdsc_hackathon.user.UserRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +35,8 @@ import org.springframework.web.server.ResponseStatusException;
 public class PostController {
     private final PostService postService;
     private final PostToPostService postToPostService;
+    private final PostReceiverRepository postReceiverRepository;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/posts")
     @Operation(summary = "내가 쓴 글 조회", description = "로그인한 User가 작성한 게시글들을 조회합니다.")
@@ -60,6 +65,7 @@ public class PostController {
         return postService.upload(post, username, 0);
     }
 
+    @Transactional
     @PostMapping("/posts/{from_id}")
     @Operation(summary = "특정 글에 글 추가", description = "{from_id}를 가진 글이 10미만 depth라면 새로운 글을 달고, 5명에게 전파합니다. 반환은 없습니다.")
     @ApiResponses(value = {
@@ -73,6 +79,8 @@ public class PostController {
         }
         Long toPostId = postService.upload(postCreateDto, username, prev.getDepth() + 1);
         Post toPost = postService.getPostById(toPostId);
+        Long memberId = memberRepository.findByUsername(username).get().getId();
+        postReceiverRepository.deleteByMemberIdAndPostId(memberId, fromId);
 
         postToPostService.addRelation(prev, toPost);
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +18,17 @@ public class PostToPostService {
     private final PostToPostRepository postToPostRepository;
 
 
+    @Transactional
     public void addRelation(Post fromPost, Post toPost) {
-        PostToPost postToPost = new PostToPost();
+        PostToPost postToPost = PostToPost.builder()
+                .prev(fromPost)
+                .now(toPost)
+                .build();
         log.error("fromPost: {}", fromPost.toString());
         log.error("toPost: {}", toPost.toString());
-        postToPost.setPrev(fromPost);
-        postToPost.setNow(toPost);
+//        postToPost.setPrev(fromPost);
+//        postToPost.setNow(toPost);
+        log.error("postToPost: {}", postToPost.toString());
         postToPostRepository.save(postToPost);
     }
 

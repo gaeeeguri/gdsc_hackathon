@@ -10,4 +10,6 @@ public interface PostReceiverRepository extends JpaRepository<PostReceiver, Long
     List<PostReceiver> findByMemberId(Long id);
 
     List<PostReceiver> findAllByMember(Member receiver);
+
+    void deleteByMemberIdAndPostId(Long memberId, Long postId);
 }
